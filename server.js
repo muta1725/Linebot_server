@@ -29,12 +29,22 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 
 const client = new line.Client(config);
 
+
 async function handleEvent(event) {
-  if (event.type !== 'beacon') {
+  if (event.type !== 'message') {
     console.log('受信しました。');
   }
 
 }
+async function handleEvent(event) {
+  if (event.type === 'message') {
+    const message = {
+      type: 'text',
+      text: 'メッセージ受け取りました。',
+    };
+  }
+}
+
 
 app.listen(PORT);
 console.log(`Server running at ${PORT}`);
