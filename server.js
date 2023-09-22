@@ -42,6 +42,19 @@ async function handleEvent(event) {
   else if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
+  if (event.type === 'message' && event.message.type === 'text' && event.message.text === '画像') {
+    // ユーザーが「画像」というテキストメッセージを送信した場合
+    const response = await client.replyMessage(event.replyToken, {
+      type: 'image',
+      originalContentUrl: 'https://picsum.photos/200/300', // 送信する画像のURL
+      previewImageUrl: 'https://picsum.photos/200' // プレビュー用の画像URL
+    });
+
+    // メッセージ送信の結果をログに記録
+    console.log('画像を送信しました:', response);
+  }
+
+  //その他の場合、メッセージをオウム返し
   return client.replyMessage(event.replyToken, {
     type: 'text',
     text: event.message.text //実際に返信の言葉を入れる箇所
