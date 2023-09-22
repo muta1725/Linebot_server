@@ -31,19 +31,23 @@ const client = new line.Client(config);
 
 
 async function handleEvent(event) {
-  if (event.type !== 'message') {
-    console.log('受信しました。');
+  if (event.type !== 'beacon') {
+    console.log('ビーコンを受信');
+    return client.replyMessage(event.replyToken, {
+      type: 'text',
+      text: 'ビーコンを受信しました。' // ビーコン受信時のメッセージ
+    });
   }
 
-}
-async function handleEvent(event) {
-  if (event.type === 'message') {
-    const message = {
-      type: 'text',
-      text: 'メッセージ受け取りました。',
-    };
+  else if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
   }
+  return client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: event.message.text //実際に返信の言葉を入れる箇所
+  });
 }
+
 
 
 app.listen(PORT);
