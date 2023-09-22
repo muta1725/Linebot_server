@@ -31,7 +31,7 @@ const client = new line.Client(config);
 
 
 async function handleEvent(event) {
-  if (event.type !== 'beacon') {
+  if (event.type == 'beacon') {
     console.log('ビーコンを受信');
     return client.replyMessage(event.replyToken, {
       type: 'text',
