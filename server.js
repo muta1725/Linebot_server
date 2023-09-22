@@ -46,8 +46,7 @@ async function handleEvent(event) {
     // ユーザーが「画像」というテキストメッセージを送信した場合
     const response = await client.replyMessage(event.replyToken, {
       type: 'image',
-      originalContentUrl: 'https://picsum.photos/200/300', // 送信する画像のURL
-      previewImageUrl: 'https://picsum.photos/200' // プレビュー用の画像URL
+      originalContentUrl: 'https://picsum.photos/200/300' // 送信する画像のURL
     });
 
     // メッセージ送信の結果をログに記録
