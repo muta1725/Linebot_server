@@ -11,6 +11,17 @@ const config = {
 
 const app = express();
 
+//認証部分
+const crypto = require("crypto");
+
+const channelSecret = "..."; // Channel secret string
+const body = "..."; // Request body string
+const signature = crypto
+  .createHmac("SHA256", channelSecret)
+  .update(body)
+  .digest("base64");
+// Compare x-line-signature request header and the signature
+
 app.get('/', (req, res) => res.send('Hello LINE BOT!(GET)')); //ブラウザ確認用(無くても問題ない)
 app.post('/webhook', line.middleware(config), (req, res) => {
     console.log(req.body.events);
