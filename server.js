@@ -11,31 +11,7 @@ const config = {
 
 const app = express();
 
-//認証部分
-const crypto = require("crypto");
 
-app.use(express.json());
-
-app.use((req,res,next) => {
-  const channelSecret = config.channelSecret; // Channel secret string
-  const body = JSON.stringify(rec.body); // Request body string
-
-    const signature = crypto
-      .createHmac("SHA256", channelSecret)
-      .update(body)
-      .digest("base64");
-    // Compare x-line-signature request header and the signature
-
-    const requestSignature = req.get("x-line-signature");
-
-    if(signature === requestSignature) {
-      //署名が一致する場合は正当なリクエスト
-      next();
-    } else {
-      //署名が一致しない場合は無効なリクエスト
-      res.status(403).send("Invalid signature");
-    }
-  });
 
 
 
