@@ -14,25 +14,13 @@ const app = express();
 //認証部分
 const crypto = require("crypto");
 
-const channelSecret = "..."; // Channel secret string
-const body = "..."; // Request body string
+const channelSecret = process.env.CHANNEL_SECRET; // Channel secret string
+const body = process.env.CHANNEL_ACCESS_TOKEN; // Request body string
 const signature = crypto
   .createHmac("SHA256", channelSecret)
   .update(body)
   .digest("base64");
-
-// x-line-signature request header から受け取った署名
-const receivedSignature = "..."; // この部分に実際のリクエストヘッダから受け取った署名をセットします
-
 // Compare x-line-signature request header and the signature
-if (signature === receivedSignature) {
-  console.log("認証成功");
-} else {
-  console.log("認証失敗");
-}
-
-
-
 
 
 
