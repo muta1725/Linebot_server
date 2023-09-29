@@ -14,8 +14,8 @@ const app = express();
 //認証部分
 const crypto = require("crypto");
 
-const channelSecret = process.env.CHANNEL_SECRET; // Channel secret string
-const body = process.env.CHANNEL_ACCESS_TOKEN; // Request body string
+const channelSecret = config.channelSecret; // Channel secret string
+const body = JSON.stringify(rec.body); // Request body string
 const signature = crypto
   .createHmac("SHA256", channelSecret)
   .update(body)
