@@ -16,11 +16,26 @@ const crypto = require("crypto");
 
 const channelSecret = "..."; // Channel secret string
 const body = "..."; // Request body string
+const xLineSignature = "..."; // x-line-signature request header
+
 const signature = crypto
   .createHmac("SHA256", channelSecret)
   .update(body)
   .digest("base64");
 // Compare x-line-signature request header and the signature
+
+if (xLineSignature === signature) {
+  console.log("認証成功");
+  // 認証成功時の処理をここに追加
+} else {
+  console.error("認証失敗");
+  // 認証失敗時の処理をここに追加
+}
+
+
+
+
+
 
 app.get('/', (req, res) => res.send('Hello LINE BOT!(GET)')); //ブラウザ確認用(無くても問題ない)
 app.post('/webhook', line.middleware(config), (req, res) => {
