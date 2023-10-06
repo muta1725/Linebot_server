@@ -14,6 +14,13 @@ const app = express();
 // body-parserミドルウェアを使用してリクエストボディをパース
 app.use(bodyParser.json());
 
+
+// isValidSignature 関数をここで定義
+function isValidSignature(body, signature, channelSecret) {
+    const hash = crypto.createHmac('sha256', channelSecret).update(body).digest('base64');
+    return hash === signature;
+}
+
 app.get('/', (req, res) => res.send('Hello LINE BOT!(GET)'));
 
 // LINEチャネルの署名検証を行うミドルウェアを追加
