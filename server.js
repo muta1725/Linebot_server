@@ -27,8 +27,7 @@ app.post('/webhook', (req, res) => {
     console.log(req.body.events);
 
     // LINEアカウントの検証が成功したことをログに記録
-    console.log('LINEアカウントの検証が成功しました。');
-
+    console.log('LINEアカウントから送信されました', response);
     // The rest of your webhook code goes here...
 
     // If all checks pass, respond with success status
