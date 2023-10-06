@@ -27,42 +27,51 @@ app.post('/webhook', (req, res) => {
     console.log(req.body.events);
 
     // LINEアカウントの検証が成功したことをログに記録
-    console.log('LINEアカウントから送信されました', response);
-    // The rest of your webhook code goes here...
+    console.log('LINEアカウントの検証が成功しました。');
 
-    // If all checks pass, respond with success status
-    res.sendStatus(200);
+    // Handle events asynchronously
+    Promise
+      .all(req.body.events.map(handleEvent)) // イベントを非同期に処理
+      .then((result) => {
+        // 応答が全て完了したらレスポンスを返す
+        res.json(result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        res.sendStatus(500);
+      });
 });
 
 const client = new line.Client(config);
-
 async function handleEvent(event) {
-    if (event.type == 'beacon') {
-        console.log('ビーコンを受信');
-        return client.replyMessage(event.replyToken, {
-            type: 'text',
-            text: 'ビーコンを受信しました。', // ビーコン受信時のメッセージ
-        });
-    } else if (event.type !== 'message' || event.message.type !== 'text') {
-        return Promise.resolve(null);
-    }
-    if (event.type === 'message' && event.message.type === 'text' && event.message.text === '画像') {
-        // ユーザーが「画像」というテキストメッセージを送信した場合
-        const response = await client.replyMessage(event.replyToken, {
-            type: 'image',
-            originalContentUrl: 'https://picsum.photos/200/300', // 送信する画像のURL
-            previewImageUrl: 'https://picsum.photos/200/300', // プレビュー用の画像URL
-        });
-
-        // メッセージ送信の結果をログに記録
-        console.log('画像を送信しました:', response);
-    }
-
-    // その他の場合、メッセージをオウム返し
+  if (event.type == 'beacon') {
+    console.log('ビーコンを受信');
     return client.replyMessage(event.replyToken, {
-        type: 'text',
-        text: event.message.text, // 実際に返信の言葉を入れる箇所
+      type: 'text',
+      text: 'ビーコンを受信しました。' // ビーコン受信時のメッセージ
     });
+  }
+
+  else if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
+  }
+  if (event.type === 'message' && event.message.type === 'text' && event.message.text === '画像') {
+    // ユーザーが「画像」というテキストメッセージを送信した場合
+    const response = await client.replyMessage(event.replyToken, {
+      type: 'image',
+      originalContentUrl: 'https://picsum.photos/200/300', // 送信する画像のURL
+      previewImageUrl: 'https://picsum.photos/200/300' // プレビュー用の画像URL
+    });
+
+    // メッセージ送信の結果をログに記録
+    console.log('画像を送信しました:', response);
+  }
+
+  //その他の場合、メッセージをオウム返し
+  return client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: event.message.text //実際に返信の言葉を入れる箇所
+  });
 }
 
 app.listen(PORT);
