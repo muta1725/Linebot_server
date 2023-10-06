@@ -2,6 +2,8 @@
 
 const express = require('express');
 const line = require('@line/bot-sdk');
+const crypto = require('crypto'); // cryptoモジュールを追加
+
 const PORT = process.env.PORT || 3000;
 
 const config = {
@@ -25,6 +27,31 @@ app.post('/webhook', line.middleware(config), (req, res) => {
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result));
+
+
+      // リクエストヘッダーからx-line-signatureを取得
+    const xLineSignature = req.headers['x-line-signature'];
+
+    // リクエストボディ
+    const body = JSON.stringify(req.body);
+
+    // チャネルシークレットを使用してダイジェスト値を計算
+    const signature = crypto
+        .createHmac('SHA256', config.channelSecret)
+        .update(body)
+        .digest('base64');
+
+    // x-line-signatureと計算した署名を比較
+    if (xLineSignature === signature) {
+        // 署名が一致した場合の処理
+        Promise
+            .all(req.body.events.map(handleEvent))
+            .then((result) => res.json(result));
+    } else {
+        // 署名が一致しない場合の処理
+        console.error('Signature validation failed');
+        res.status(400).send('Signature validation failed');
+    }
 });
 
 const client = new line.Client(config);
