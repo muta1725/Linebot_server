@@ -60,7 +60,7 @@ async function handleEvent(event) {
     } else if (event.type !== 'message' || event.message.type !== 'text') {
         return Promise.resolve(null);
     }
-    }
+    
 
     return client.replyMessage(event.replyToken, {
         type: 'text',
