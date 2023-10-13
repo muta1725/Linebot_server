@@ -60,15 +60,6 @@ async function handleEvent(event) {
     } else if (event.type !== 'message' || event.message.type !== 'text') {
         return Promise.resolve(null);
     }
-
-    if (event.type === 'message' && event.message.type === 'text' && event.message.text === '画像') {
-        const response = await client.replyMessage(event.replyToken, {
-            type: 'image',
-            originalContentUrl: 'https://picsum.photos/200/300',
-            previewImageUrl: 'https://picsum.photos/200/300',
-        });
-
-        console.log('画像を送信しました:', response);
     }
 
     return client.replyMessage(event.replyToken, {
